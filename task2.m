@@ -39,7 +39,7 @@ n= V./(J*D);
 
 % Find drag coeffient by use of eq. (13.33) in compendium
 C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
-C_D = 2*C_F*(1+2*thickness./(chord*Z));
+C_D = 2*C_F*(1+2*thickness./(chord));
 
 % Interpolate lift coefficient at zero aoa from the XFoil results
 C_Lc = interp1(LiftRadius(:,1),LiftRadius(:,2),x,'pchip');
@@ -75,8 +75,8 @@ dT(:,end)=0;
 dQ(:,end)=0;
 
 % Integrate with MATLABs trapz() integration
-T=trapz(x,dT,2);
-Q=trapz(x,dQ,2);
+T=trapz(r,dT,2);
+Q=trapz(r,dQ,2);
 
 % Calculate the thrust and torque coeffient
 K_T= T'./(rho*n.^2*D^4);
@@ -109,8 +109,8 @@ plot(J,eta0,'r',wagB(:,1),wagB(:,4),'r--')
 legend('K_T - lifting line','K_T - Wag. B','10\cdot K_Q - lifting line '...
     ,'10\cdot K_Q - Wag. B','\eta_0 - lifting line','\eta_0 - Wag. B')
 
-figure(2)
-plot(J,K_Ter,J,K_Qer,J,eta0er)
+% figure(2)
+% plot(J,K_Ter,J,K_Qer,J,eta0er)
 
 % figure(2)
 % plot(J,K_Q,wagB(:,1),wagB(:,3))

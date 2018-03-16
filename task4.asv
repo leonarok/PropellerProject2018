@@ -65,12 +65,12 @@ twonorm=zeros(1,itermax);
 %     gamma(i,:)=gamma_init;
 % end
 for i=1:length(J)
-    gamma(i,:)=interp1(gamma_dist(:,1),gamma_dist(:,i+1),x)/Z;
+    gamma(i,:)=0.25*interp1(gamma_dist(:,1),gamma_dist(:,i+1),x);
 end
     
 for iter=1:itermax
     for i=1:length(J)
-        U_T(i,:)=Z*gamma(i,:)./(2*pi*r);
+        U_T(i,:)=gamma(i,:)./(2*pi*r);
         for j=1:length(x)
             a=0.5; b=V(i); c=-U_T(i,j).*(2*pi.*r(j)*n(i)-U_T(i,j)/2);
             U_A(i,j)= (-b+sqrt(b^2-4*a*c))/(2*a);
@@ -104,7 +104,7 @@ for iter=1:itermax
         Vinf(i,:)=sqrt( ( V(i)+0.5*U_A(i,:) ).^2+...
             ( 2*pi*r*n(i)-0.5*U_T(i,:) ).^2);
         
-        gamma_new(i,:)=0.5*Vinf(i,:).*chord.*C_L(i,:);
+        gamma_new(i,:)=0.5*Vinf(i,:)*chord.*C_L(i,:);
         gamma_input(i,:)=gamma(i,:)+damp*(gamma_new(i,:)-gamma(i,:));
         gamma_input(i,end)=0;gamma_input(i,1)=0;
     end
@@ -123,8 +123,8 @@ dQi(i,:)=rho*gamma(i,:).*(V(i)+U_A(i,:)/2).*r;
 dLi(i,:)=sqrt(dTi(i,:).^2+dQi(i,:).^2/(r.^2));
 
 beta_i(i,:)=atan( (V(i)+0.5*U_A(i,:))/(2*pi.*r*n(i)-0.5*U_T(i,:)) );
-dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*sin(beta_i(i,:));
-dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*r.*cos(beta_i(i,:));
+dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i)*Z.*sin(beta_i(i,:));
+dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i)*Z.*r.*cos(beta_i(i,:));
 
 dT(i,:)=dTi(i,:)-dTd(i,:);
 dQ(i,:)=dQi(i,:)+dQd(i,:);
@@ -133,8 +133,8 @@ end
 dT(:,end)=0;
 dQ(:,end)=0;
 
-T=Z*trapz(r,dT,2);
-Q=Z*trapz(r,dQ,2);
+T=trapz(r,dT,2);
+Q=trapz(r,dQ,2);
 
 K_T= T'./(rho*n.^2*D^4);
 K_Q= Q'./(rho*n.^2*D^5);

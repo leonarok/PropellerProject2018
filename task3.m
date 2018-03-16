@@ -23,7 +23,7 @@ D=1;
 PdivD=1;
 AEA0=0.4;
 Z=4;
-k=600;
+k=200;
 damp=0.05;
 
 h= (1-0.167)/(k-1);
@@ -69,12 +69,15 @@ for iter=1:itermax
         beta_i(i,2:end-1)=atan(U_T(i,2:end-1)./U_A(i,2:end-1));
         alpha(i,2:end-1) = phi(2:end-1)-beta_i(i,2:end-1);
         C_L(i,:) = C_Lc + 2*pi*alpha(i,:);
-        Vinf(i,:)= sqrt( (2*pi*r*n(i)).^2 + V(i).^2 );
+        %Vinf(i,:)= sqrt( (2*pi*r*n(i)).^2 + V(i).^2 );
+        Vinf(i,:)=sqrt( ( V(i)+0.5*U_A(i,:) ).^2+...
+            ( 2*pi*r*n(i)-0.5*U_T(i,:) ).^2);
         gamma_new(i,:)=0.5*Vinf(i,:)*Z.*chord.*C_L(i,:);
         gamma_input(i,:)=gamma(i,:)+damp*(gamma_new(i,:)-gamma(i,:));
     end
     twonorm(iter)= (sum(sum(abs(gamma_input.^2-gamma.^2))))^0.5;
     gamma=gamma_input;
+    twonorm(iter)/twonorm(1)
     if twonorm(iter)/twonorm(1)<tol
         fprintf('Convergence criterion met after %d iterations. \n',iter);
         break
@@ -98,8 +101,8 @@ end
 dT(:,end)=0;
 dQ(:,end)=0;
 
-T=trapz(x,dT,2);
-Q=trapz(x,dQ,2);
+T=trapz(r,dT,2);
+Q=trapz(r,dQ,2);
 
 K_T= T'./(rho*n.^2*D^4);
 K_Q= Q'./(rho*n.^2*D^5);
@@ -114,7 +117,7 @@ save('gamma_dist','gamma_dist')
 figure(1)
 hold on
 grid minor
-title('Thrust, torque & efficiency without induced velocities')
+title('Thrust, torque & efficiency with nm induced velocities')
 xlim([J(1) J(end)])
 ylim([0 max(10*K_Q)*1.5])
 xlabel('J [-]')

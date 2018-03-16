@@ -10,9 +10,9 @@ function J = SingularIntegration(x, f, x0)
 	for i = 1:n
 		if (x(i) - x0) ~= 0
 			integrand_num(i) = f(i)/(x0 - x(i)) - f0/(x0 - x(i));
-		end
-	end
-
+        end
+    end
+    
 	J = trapz(x, integrand_num);
 
 	J = J + f0*(-log(x(n) - x0) + log(x0 - x(1)));
