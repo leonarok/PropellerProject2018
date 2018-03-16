@@ -68,8 +68,8 @@ n= V./(J*D);
 %---------------------------------------------------------%
 % Find drag coeffient by use of eq. (13.33) in compendium %
 %---------------------------------------------------------%
-C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
-C_D = 2*C_F*(1+2*thickness./(chord));
+% C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
+% C_D = 2*C_F*(1+2*thickness./(chord));
 
 %-----------------------------------------------------------------%
 % Interpolate lift coefficient at zero aoa from the XFoil results %
@@ -84,7 +84,7 @@ U_A=gamma; U_T=gamma; alpha=gamma; Vinf=gamma; C_L=gamma; dTi=gamma;
 gamma_new=gamma; gamma_input=gamma;
 dQi=gamma; dL=gamma; dT=gamma; dTd=gamma; dKd=gamma; dQ=gamma; dLi=gamma;
 dQd=gamma; d_gamma=gamma; beta_i=gamma; i_a=zeros(1,length(x)); i_t=i_a;
-twonorm=zeros(1,itermax);
+twonorm=zeros(1,itermax); Re_c=gamma;
 
 %----------------------------------------------------------------%
 % Interpolate circulation from the circulation dist. from task 3 %
@@ -218,6 +218,9 @@ for i =1:length(J)
     % Find thrust and torque contribution because of drag at every foil   %
     % section                                                             %
     %---------------------------------------------------------------------%
+    Re_c(i,:)=Vinf(i,:).*chord/nu;
+    C_F = 0.075./(log10(Re_c(i,:))-2).^2; % from ITTC 57'
+    C_D = 2*C_F.*(1+2*thickness./(chord));
     dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*sin(beta_i(i,:));
     dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*r.*cos(beta_i(i,:));
 

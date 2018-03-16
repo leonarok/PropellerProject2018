@@ -68,8 +68,8 @@ n= V./(J*D);
 %---------------------------------------------------------%
 % Find drag coeffient by use of eq. (13.33) in compendium %
 %---------------------------------------------------------%
-C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
-C_D = 2*C_F*(1+2*thickness./(chord));
+% C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
+% C_D = 2*C_F*(1+2*thickness./(chord));
 
 %-----------------------------------------------------------------%
 % Interpolate lift coefficient at zero aoa from the XFoil results %
@@ -120,7 +120,7 @@ for iter=1:itermax
         %-----------------------------------------------------------%
         beta_i(i,1:end)=atan( ( V(i)+0.5*U_A(i,:) ) ...
             ./( 2*pi*r*n(i)-0.5*U_T(i,:) ));
-        d_gamma(i,:)=gammaderive(h,gamma(i,:));
+        d_gamma(i,:)=gammaderive(h*D/2,gamma(i,:));
         
         %--------------------------------------------------------------%
         % Correct the tangential and axial induced velocities with the %
@@ -197,7 +197,7 @@ for iter=1:itermax
     %------------------------------------------------------------------%
     if isnan(sum(sum(gamma)))==1
         clc
-        fprintf('NaN detected! Cancelling iterations\n')
+        fprintf('NaN detected! Cancelling program...\n')
         return
     end
 end
@@ -218,6 +218,9 @@ for i =1:length(J)
     % Find thrust and torque contribution because of drag at every foil   %
     % section                                                             %
     %---------------------------------------------------------------------%
+    Re_c(i,:)=n
+    C_F = 0.075/(log10(Re_c(i,:))-2)^2; % from ITTC 57'
+    C_D = 2*C_F*(1+2*thickness./(chord));
     dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*sin(beta_i(i,:));
     dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*r.*cos(beta_i(i,:));
 
@@ -237,8 +240,8 @@ dQ(:,end)=0;
 %--------------------------------------------%
 % Integrate with MATLABs trapz() integration %
 %--------------------------------------------%
-T=trapz(r,dT,2);
-Q=trapz(r,dQ,2);
+T=Z*trapz(r,dT,2);
+Q=Z*trapz(r,dQ,2);
 
 %-------------------------------------------%
 % Calculate the thrust and torque coeffient %
@@ -255,7 +258,7 @@ eta0=J/(2*pi) .* K_T./K_Q;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[10 10 900 600])
+figure('rend','painters','pos',[100 100 900 600])
 hold on
 grid minor
 title('Thrust, torque & efficiency with induced velocities & induction factors')
