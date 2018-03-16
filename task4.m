@@ -197,7 +197,7 @@ for iter=1:itermax
     %------------------------------------------------------------------%
     if isnan(sum(sum(gamma)))==1
         clc
-        fprintf('NaN detected! Cancelling iterations\n')
+        fprintf('NaN detected! Cancelling program...\n')
         return
     end
 end
@@ -255,7 +255,7 @@ eta0=J/(2*pi) .* K_T./K_Q;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[10 10 900 600])
+figure('rend','painters','pos',[100 100 900 600])
 hold on
 grid minor
 title('Thrust, torque & efficiency with induced velocities & induction factors')

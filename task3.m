@@ -165,7 +165,7 @@ for iter=1:itermax
     %------------------------------------------------------------------%
     if isnan(sum(sum(gamma)))==1
         clc
-        fprintf('NaN detected! Cancelling iterations\n')
+        fprintf('NaN detected! Cancelling program...\n')
         return
     end
     
