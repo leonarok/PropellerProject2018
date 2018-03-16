@@ -45,7 +45,7 @@ span=D/2*(1-0.167);
 %-----------------------------------------%
 % Discretize propeller into foil sections %
 %-----------------------------------------%
-k=80;
+k=40;
 h=(1-0.167)/(k-1);
 x=0.167:h:1; % x=r/R
 r=x*D/2;
@@ -120,7 +120,7 @@ for iter=1:itermax
         %-----------------------------------------------------------%
         beta_i(i,1:end)=atan( ( V(i)+0.5*U_A(i,:) ) ...
             ./( 2*pi*r*n(i)-0.5*U_T(i,:) ));
-        d_gamma(i,:)=gammaderive(D,r,k,gamma(i,:));
+        d_gamma(i,:)=gammaderive(h*D/2,gamma(i,:));
         
         %--------------------------------------------------------------%
         % Correct the tangential and axial induced velocities with the %
@@ -237,8 +237,8 @@ dQ(:,end)=0;
 %--------------------------------------------%
 % Integrate with MATLABs trapz() integration %
 %--------------------------------------------%
-T=trapz(r,dT,2);
-Q=trapz(r,dQ,2);
+T=Z*trapz(r,dT,2);
+Q=Z*trapz(r,dQ,2);
 
 %-------------------------------------------%
 % Calculate the thrust and torque coeffient %

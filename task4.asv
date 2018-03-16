@@ -45,7 +45,7 @@ span=D/2*(1-0.167);
 %-----------------------------------------%
 % Discretize propeller into foil sections %
 %-----------------------------------------%
-k=80;
+k=40;
 h=(1-0.167)/(k-1);
 x=0.167:h:1; % x=r/R
 r=x*D/2;
@@ -120,7 +120,7 @@ for iter=1:itermax
         %-----------------------------------------------------------%
         beta_i(i,1:end)=atan( ( V(i)+0.5*U_A(i,:) ) ...
             ./( 2*pi*r*n(i)-0.5*U_T(i,:) ));
-        d_gamma(i,:)=gammaderive(D,r,k,gamma(i,:));
+        d_gamma(i,:)=gammaderive(h,gamma(i,:));
         
         %--------------------------------------------------------------%
         % Correct the tangential and axial induced velocities with the %
@@ -202,29 +202,59 @@ for iter=1:itermax
     end
 end
 
+%-------------------------------------------------------%
+% Calculate thrust and torque on every foil section for %
+% every advance number                                  %
+%-------------------------------------------------------%
 for i =1:length(J)
+    %---------------------------------------------------------------------%
+    % Find thrust and torque contribution because of lift at every foil   %
+    % section                                                             %
+    %---------------------------------------------------------------------%
     dTi(i,:)=rho*gamma(i,:).*(2*pi*r*n(i)-U_T(i,:)/2);
     dQi(i,:)=rho*gamma(i,:).*(V(i)+U_A(i,:)/2).*r;
-    dLi(i,:)=sqrt(dTi(i,:).^2+dQi(i,:).^2/(r.^2));
 
+    %---------------------------------------------------------------------%
+    % Find thrust and torque contribution because of drag at every foil   %
+    % section                                                             %
+    %---------------------------------------------------------------------%
     dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*sin(beta_i(i,:));
     dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*r.*cos(beta_i(i,:));
 
+    %--------------------------------------------------------------%
+    % Find total thrust and torque component at every foil section %
+    %--------------------------------------------------------------%
     dT(i,:)=dTi(i,:)-dTd(i,:);
     dQ(i,:)=dQi(i,:)+dQd(i,:);
 end
 
+%--------------------------------------------------%
+% Numerical errors at propeller ends are corrected %
+%--------------------------------------------------%
 dT(:,end)=0;
 dQ(:,end)=0;
 
-T=Z*trapz(r,dT,2);
-Q=Z*trapz(r,dQ,2);
+%--------------------------------------------%
+% Integrate with MATLABs trapz() integration %
+%--------------------------------------------%
+T=trapz(r,dT,2);
+Q=trapz(r,dQ,2);
 
+%-------------------------------------------%
+% Calculate the thrust and torque coeffient %
+%-------------------------------------------%
 K_T= T'./(rho*n.^2*D^4);
 K_Q= Q'./(rho*n.^2*D^5);
 
+%----------------------%
+% Calculate efficiency %
+%----------------------%
 eta0=J/(2*pi) .* K_T./K_Q;
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%--------------------------PLOTTING---------------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure('rend','painters','pos',[10 10 900 600])
 hold on
 grid minor
