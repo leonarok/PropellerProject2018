@@ -119,7 +119,7 @@ hold on
 grid minor
 title('Thrust, torque & efficiency with nm induced velocities')
 xlim([J(1) J(end)])
-ylim([0 max(10*K_Q)*1.5])
+ylim([0 1.2])
 xlabel('J [-]')
 ylabel('K_T [-]      10\cdot K_Q [-]      \eta_0 [-]')
 

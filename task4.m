@@ -24,7 +24,7 @@ D=1;
 PdivD=1;
 AEA0=0.4;
 Z=4;
-k=80;
+k=100;
 damp=0.05;
 koeff=0.5;
 
@@ -58,15 +58,15 @@ twonorm=zeros(1,itermax);
 
 %gamma=2*ones(length(J),length(x));
 
-% gamma_0=0.7;
-% y=-span/2:h*D/2:span/2;
-% gamma_init=gamma_0*sqrt( 1-( y/(span/2) ).^2 );
-% for i=1:length(J)
-%     gamma(i,:)=gamma_init;
-% end
+gamma_0=0.5;
+y=-span/2:h*D/2:span/2;
+gamma_init=gamma_0*sqrt( 1-( y/(span/2) ).^2 );
 for i=1:length(J)
-    gamma(i,:)=interp1(gamma_dist(:,1),gamma_dist(:,i+1),x)/Z;
+    gamma(i,:)=gamma_init;
 end
+% for i=1:length(J)
+%     gamma(i,:)=interp1(gamma_dist(:,1),gamma_dist(:,i+1),x)/Z;
+% end
     
 for iter=1:itermax
     for i=1:length(J)
@@ -76,15 +76,10 @@ for iter=1:itermax
             U_A(i,j)= (-b+sqrt(b^2-4*a*c))/(2*a);
         end
        % beta_i(i,2:end-1)=atan(U_T(i,2:end-1)./U_A(i,2:end-1));
-        beta_i(i,1:end)=atan( ( V(i)+0.5*U_A(i,:) )./( 2*pi*r*n(i)-0.5*U_T(i,:) ));
+       beta_i(i,1:end)=atan( ( V(i)+0.5*U_A(i,:) )./( 2*pi*r*n(i)-0.5*U_T(i,:) ));
         
-        d_gamma(i,:)=gammaderive(D,r,k,gamma(i,:));
-        %d_gamma(i,:)=gammaderive2(r,gamma(i,:));
-
+       d_gamma(i,:)=gammaderive(D,r,k,gamma(i,:));
         
-%        plot(x,gamma)
-%        drawnow
-%         
        for j_fixed=2:length(x)-1
             r0=r(j_fixed);
             
@@ -110,8 +105,11 @@ for iter=1:itermax
     end
     twonorm(iter)= (sum(sum(abs(gamma_input-gamma).^2)))^0.5;
     gamma=gamma_input; 
-    twonorm(iter)/twonorm(1)
+    
+    percentdone_print(twonorm(iter)/twonorm(1),tol);
+    
     if twonorm(iter)/twonorm(1)<tol
+        clc
         fprintf('Convergence criterion met after %d iterations. \n',iter);
         break
     end
@@ -145,7 +143,7 @@ hold on
 grid minor
 title('Thrust, torque & efficiency with induced velocities & induction factors')
 xlim([J(1) J(end)])
-%ylim([0 max(10*K_Q)*1.5])
+ylim([0 1.2])
 xlabel('J [-]')
 ylabel('K_T [-]      10\cdot K_Q [-]      \eta_0 [-]')
 

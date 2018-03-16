@@ -100,6 +100,7 @@ hold on
 grid minor
 title('Thrust, torque & efficiency without induced velocities')
 xlim([J(1) J(end)])
+ylim([0 1.2])
 xlabel('J [-]')
 ylabel('K_T [-]      10\cdot K_Q [-]      \eta_0 [-]')
 
