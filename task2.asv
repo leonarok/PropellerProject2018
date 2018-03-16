@@ -11,9 +11,9 @@ clear all
 close all
 clc
 
-%-----------------------------------------------------------%
-% Load lift coeffiecients, Wagenigen data and geometry data %
-%-----------------------------------------------------------%
+%----------------------------------------------------------%
+% Load liftcoeffiecients, Wagenigen data and geometry data %
+%----------------------------------------------------------%
 load LiftRadius.mat;
 wagB=dlmread('wagB.txt'); % J, KT, KQ, eta
 geometry= dlmread('Geometry.txt'); % r/R, chord/D, t/D, P/D
@@ -35,8 +35,7 @@ Z=4;
 % Discretize propeller into foil sections %
 %-----------------------------------------%
 k=400;
-h=(1-0.167)/(k-1);
-x=0.167:h:1; % x=r/R
+x=[0.167: (1-0.167)/(k-1) :1]; % x=r/R
 r=x*D/2;
 phi=atan(PdivD/pi./x);
 
@@ -90,25 +89,16 @@ for i =1:length(J)
     %---------------------------------------------------------------%
     C_L(i,:)= C_Lc(:)' +2*pi*alpha(i,:);
     
-    %---------------------------------------------------------------------%
-    % Find lift contribution at every foil section, decompose into thrust %
-    % and tangential force                                                %
-    %---------------------------------------------------------------------%
+    %---------------------------------------------------------------%
+    % Find                                           %
+    %---------------------------------------------------------------%
     dL(i,:)= 0.5*rho*Vinf(i,:).^2.*C_L(i,:)*Z.*chord;
     dTi(i,:)=dL(i,:).*cos(beta(i,:));
     dKi(i,:)=dL(i,:).*sin(beta(i,:));
-    
-    %---------------------------------------------------------------------%
-    % Find drag contribution at every foil section, decompose into thrust %
-    % and tangential force                                                %
-    %---------------------------------------------------------------------%
     dD(i,:)=0.5*rho*Vinf(i,:).^2*Z.*chord.*C_D;
     dTd(i,:)=dD(i,:).*sin(beta(i,:));
     dKd(i,:)=dD(i,:).*cos(beta(i,:));
     
-    %--------------------------------------------------------------%
-    % Find total thrust and torque component at every foil section %
-    %--------------------------------------------------------------%
     dT(i,:)=dTi(i,:)-dTd(i,:);
     dQ(i,:)=( dKi(i,:)+dKd(i,:) ).*x*D/2;
 end
@@ -147,7 +137,7 @@ eta0wag=interp1(wagB(:,1),wagB(:,4),J);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[100 100 900 600])
+figure(1)
 hold on
 grid minor
 title('Thrust, torque & efficiency without induced velocities')
