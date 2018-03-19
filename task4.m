@@ -213,14 +213,18 @@ for i =1:length(J)
     %---------------------------------------------------------------------%
     dTi(i,:)=rho*gamma(i,:).*(2*pi*r*n(i)-U_T(i,:)/2);
     dQi(i,:)=rho*gamma(i,:).*(V(i)+U_A(i,:)/2).*r;
-
-    %---------------------------------------------------------------------%
-    % Find thrust and torque contribution because of drag at every foil   %
-    % section                                                             %
-    %---------------------------------------------------------------------%
+ 
+    %---------------------------------------------------------%
+    % Find drag coeffient by use of eq. (13.33) in compendium %
+    %---------------------------------------------------------%
     Re_c(i,:)=Vinf(i,:).*chord/nu;
     C_F = 0.075./(log10(Re_c(i,:))-2).^2; % from ITTC 57'
     C_D = 2*C_F.*(1+2*thickness./(chord));
+    
+    %---------------------------------------------------------------------%
+    % Find thrust and torque contribution because of drag at every foil   %
+    % section                                                             %
+    %---------------------------------------------------------------------%    
     dTd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*sin(beta_i(i,:));
     dQd(i,:)=0.5*rho*Vinf(i,:).^2.*chord*C_D(i).*r.*cos(beta_i(i,:));
 

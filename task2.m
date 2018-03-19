@@ -54,12 +54,6 @@ J=[0.5 0.6 0.7 0.8 0.9 1.0 1.1];
 V= Re*nu/cx0 * 1./sqrt(1+(x0*pi./J).^2);
 n= V./(J*D);
 
-%---------------------------------------------------------%
-% Find drag coeffient by use of eq. (13.33) in compendium %
-%---------------------------------------------------------%
-C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
-C_D = 2*C_F*(1+2*thickness./(chord));
-
 %-----------------------------------------------------------------%
 % Interpolate lift coefficient at zero aoa from the XFoil results %
 %-----------------------------------------------------------------%
@@ -97,6 +91,13 @@ for i =1:length(J)
     dL(i,:)= 0.5*rho*Vinf(i,:).^2.*C_L(i,:)*Z.*chord;
     dTi(i,:)=dL(i,:).*cos(beta(i,:));
     dKi(i,:)=dL(i,:).*sin(beta(i,:));
+    
+    %---------------------------------------------------------%
+    % Find drag coeffient by use of eq. (13.33) in compendium %
+    %---------------------------------------------------------%
+    Re_c(i,:)=Vinf(i,:).*chord/nu;
+    C_F = 0.075./(log10(Re_c(i,:))-2).^2; % from ITTC 57'
+    C_D = 2*C_F.*(1+2*thickness./(chord));
     
     %---------------------------------------------------------------------%
     % Find drag contribution at every foil section, decompose into thrust %
