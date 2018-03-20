@@ -47,13 +47,14 @@ k=100;
 h=(1-0.167)/(k-1);
 x=0.167:h:1; % x=r/R
 r=x*D/2;
-phi=atan(PdivD*D./(2*pi*r)); 
 
-%-------------------------------------------------------------%
-% Interpolate for chord length and thickness at foil sections %
-%-------------------------------------------------------------%
+%---------------------------------------------------------------------%
+% Interpolate for chord length, thickness and pitch angle at sections %
+%---------------------------------------------------------------------%
 chord = interp1(geometry(:,1),geometry(:,2),x,'pchip');
 thickness = interp1(geometry(:,1),geometry(:,3),x,'pchip');
+PdivD = interp1(geometry(:,1),geometry(:,4),x,'pchip');
+phi = atan(PdivD*D./(2*pi*r) );
 
 %---------------------------------------------------------------------%
 % Initialize vector of advance numbers and find corresponding V and n %
