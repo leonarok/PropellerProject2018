@@ -256,7 +256,7 @@ eta0=J/(2*pi) .* K_T./K_Q;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[100 100 600 900])
+figure('rend','painters','pos',[100 100 600 800])
 hold on
 grid minor
 title('Thrust, torque & efficiency with induced velocities & induction factors')

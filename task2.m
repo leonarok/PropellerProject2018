@@ -148,7 +148,7 @@ eta0wag=interp1(wagB(:,1),wagB(:,4),J);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[100 100 600 900])
+figure('rend','painters','pos',[100 100 600 800])
 hold on
 grid minor
 title('Thrust, torque & efficiency without induced velocities')
