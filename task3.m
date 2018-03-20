@@ -232,13 +232,13 @@ save('gamma_dist','gamma_dist')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------PLOTTING---------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure('rend','painters','pos',[100 100 900 600])
+figure('rend','painters','pos',[100 100 600 900])
 hold on
 grid minor
 title(['Thrust, torque & efficiency with simple model of '...
     'induced velocities'])
 xlim([J(1) J(end)])
-ylim([0 1.2])
+ylim([0 1.0])
 xlabel('J [-]')
 ylabel('K_T [-]      10\cdot K_Q [-]      \eta_0 [-]')
 
