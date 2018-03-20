@@ -43,7 +43,7 @@ span=D/2*(1-0.167);
 %-----------------------------------------%
 % Discretize propeller into foil sections %
 %-----------------------------------------%
-k=80;
+k=100;
 h=(1-0.167)/(k-1);
 x=0.167:h:1; % x=r/R
 r=x*D/2;
@@ -75,7 +75,7 @@ gamma=zeros(length(J),length(x));
 U_A=gamma; U_T=gamma; alpha=gamma; Vinf=gamma; C_L=gamma; dTi=gamma;
 dQi=gamma; dL=gamma; dT=gamma; dTd=gamma; dKd=gamma; dQ=gamma; dLi=gamma;
 dQd=gamma; gamma_new=gamma; gamma_input=gamma; beta_i=gamma;
-twonorm=zeros(1,itermax);
+twonorm=zeros(1,itermax); Re_c=zeros(1,length(x));
 
 %-------------------------------------------------------%
 % Set initial circulation to an elliptical distribution %
@@ -118,7 +118,7 @@ for iter=1:itermax
         alpha(i,2:end-1) = phi(2:end-1)-beta_i(i,2:end-1);
         
         %---------------------------------------------------------------%
-        % Find lift coeffiecient as the contribution of camber part and %
+        % Find lift coefficient as the contribution of camber part and %
         % angle of attack part                                          %
         %---------------------------------------------------------------%
         C_L(i,:) = C_Lc + 2*pi*alpha(i,:);

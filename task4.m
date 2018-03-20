@@ -45,7 +45,7 @@ span=D/2*(1-0.167);
 %-----------------------------------------%
 % Discretize propeller into foil sections %
 %-----------------------------------------%
-k=60;
+k=100;
 h=(1-0.167)/(k-1);
 x=0.167:h:1; % x=r/R
 r=x*D/2;
@@ -64,12 +64,6 @@ thickness = interp1(geometry(:,1),geometry(:,3),x,'pchip');
 J=[0.5 0.6 0.7 0.8 0.9 1.0 1.1];
 V= Re*nu/cx0 * 1./sqrt(1+(x0*pi./J).^2);
 n= V./(J*D);
-
-%---------------------------------------------------------%
-% Find drag coeffient by use of eq. (13.33) in compendium %
-%---------------------------------------------------------%
-% C_F = 0.075/(log10(Re)-2)^2; % from ITTC 57'
-% C_D = 2*C_F*(1+2*thickness./(chord));
 
 %-----------------------------------------------------------------%
 % Interpolate lift coefficient at zero aoa from the XFoil results %
